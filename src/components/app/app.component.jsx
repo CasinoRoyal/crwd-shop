@@ -5,7 +5,7 @@ import Homepage from '../../pages/homepage';
 import ShopPage from '../../pages/shop-page';
 import SignInSignUp from '../../pages/sign-in-sign-up';
 import Header from '../header';
-import { auth } from '../../firebase/firebase.utils';
+import { auth, createUserProfile } from '../../firebase/firebase.utils';
 
 import './app.styles.scss';
 
@@ -18,8 +18,23 @@ class App extends Component {
   userAuth = false;
 
   componentDidMount() {
-    this.userAuth = auth.onAuthStateChanged(user => {
-      this.setState({currentUser: user})
+    this.userAuth = auth.onAuthStateChanged(async (userAuth) => {
+
+      if (userAuth) {
+        const userRef = await createUserProfile(userAuth);
+        userRef.onSnapshot((snapshot) => {
+          this.setState({
+            currentUser: {
+              id: snapshot.id,
+              ...snapshot.data()
+            }
+          })
+        })
+      } else {
+        this.setState({
+          currentUser: userAuth
+        })
+      }
     })
   }
 
