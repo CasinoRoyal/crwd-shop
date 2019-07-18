@@ -22,5 +22,13 @@
       padding: 10px 15px;
       text-transform: uppercase;
     }
+
+    button {
+      font-family: inherit;
+      font-size: inherit;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
   }
 }
