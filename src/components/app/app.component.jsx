@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, 
          Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import Homepage from '../../pages/homepage';
 import ShopPage from '../../pages/shop-page';
@@ -10,6 +11,7 @@ import SignInSignUp from '../../pages/sign-in-sign-up';
 import Header from '../header';
 import { auth, createUserProfile } from '../../firebase/firebase.utils';
 import { setCurrentUser } from '../../redux/user/user.actions';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 import './app.styles.scss';
 
@@ -20,10 +22,10 @@ class App extends Component {
   componentDidMount() {
     const { setCurrentUser } = this.props;
 
-    this.userAuth = auth.onAuthStateChanged(async (userAuth) => {
+    this.userAuth = auth.onAuthStateChanged(async (user) => {
 
-      if (userAuth) {
-        const userRef = await createUserProfile(userAuth);
+      if (user) {
+        const userRef = await createUserProfile(user);
         userRef.onSnapshot((snapshot) => {
           setCurrentUser({
             id: snapshot.id,
@@ -31,7 +33,7 @@ class App extends Component {
           })
         })
       } else {
-        setCurrentUser(userAuth);
+        setCurrentUser(user);
       }
     })
   }
@@ -49,8 +51,9 @@ class App extends Component {
           <Route exact path='/' component={Homepage} />
           <Route path='/shop' component={ShopPage} />
           <Route exact path='/checkout' component={CheckoutPage} />
-          <Route path='/login' render={() => this.props.currentUser ?
-              <Redirect to='/' /> :
+          <Route exact path='/login' render={() => this.props.currentUser ?
+              <Redirect to='/' />
+              :
               <SignInSignUp />
           } />
         </Switch>
@@ -59,8 +62,8 @@ class App extends Component {
   }
 };
 
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
 });
 
 const mapDispatchToProps = (dispatch) => ({
