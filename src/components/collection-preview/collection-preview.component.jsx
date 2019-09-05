@@ -6,7 +6,6 @@ import CollectionItem from '../collection-item';
 import './collection-preview.styles.scss';
 
 const CollectionPreview = (props) => {
-  console.log(props)
   const { title, items, history, match, routeName } = props;
   return(
     <div className="collection-preview">
