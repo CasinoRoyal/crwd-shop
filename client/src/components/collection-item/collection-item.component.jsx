@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
+import { CartContext } from '../../providers/cart/cart.provider';
 import CustomButton from '../custom-button';
 
 import './collection-item.styles.scss';
 
-const CollectionItem = ({ item, addItem }) => {
+const CollectionItem = ({ item }) => {
+  const { addItem } = useContext(CartContext);
   const { imageUrl, name, price } = item;
 
   return(

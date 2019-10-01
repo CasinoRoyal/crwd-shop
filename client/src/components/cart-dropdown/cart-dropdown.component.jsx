@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
+import { CartContext } from '../../providers/cart/cart.provider';
 
 import CustomButton from '../custom-button';
 import CartItem from '../cart-item';
 
-import { toogleCartDropdown } from '../../redux/cart/cart.actions';
-
 import './cart-dropdown.styles.scss';
 
-const CartDropdown = ({ cartItems, history, dispatch }) => {
+const CartDropdown = ({ history }) => {
+  const { cartItems, toogleCartDropdown } = useContext(CartContext);
+
   return(
     <div className="cart-dropdown">
       <div className="cart-items"> 
@@ -23,7 +25,7 @@ const CartDropdown = ({ cartItems, history, dispatch }) => {
       </div>
       <CustomButton onClick={() => {
         history.push('/checkout');
-        dispatch(toogleCartDropdown());
+        toogleCartDropdown();
       }}>
         Go to checkout
       </CustomButton>
